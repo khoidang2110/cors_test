@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h2>Test API</h2>
+    <button onclick="fetchData()">Gọi API</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await axios.get("https://go.thepointsaver.com/v2/item/?search=h");
+                document.getElementById("result").textContent = JSON.stringify(response.data, null, 2);
+            } catch (error) {
+                document.getElementById("result").textContent = "Lỗi: " + error.message;
+                console.error("Lỗi API:", error);
+            }
+        }
+    </script>
+</body>
+</html>
