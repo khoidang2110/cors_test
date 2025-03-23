@@ -4,22 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Test</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .card-img-top {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin: auto;
+        }
+    </style>
+    <!-- Axios library -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <h2>Test API</h2>
-    <button onclick="fetchData()">Gọi API</button>
-    <pre id="result"></pre>
+    <div class="container">
+        <h2 class="mt-5">Test API</h2>
+        <button class="btn btn-primary mb-3" onclick="fetchData()">Gọi API</button>
+        <div id="result"></div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         async function fetchData() {
             try {
                 const response = await axios.get("https://go.thepointsaver.com/v2/item/?search=h");
-                document.getElementById("result").textContent = JSON.stringify(response.data, null, 2);
+                displayData(response.data);
             } catch (error) {
-                document.getElementById("result").textContent = "Lỗi: " + error.message;
-                console.error("Lỗi API:", error);
+                displayError(error);
             }
+        }
+
+        function displayData(data) {
+            const items = data.data.items;
+            const resultElement = document.getElementById("result");
+
+            // Clear previous results
+            resultElement.innerHTML = "";
+
+            // Iterate through items and create Bootstrap cards for each
+            items.forEach(item => {
+                const card = `
+                    <div class="card mb-3">
+                        <div class="d-flex justify-content-center">
+                            <img src="${item.item_image}" class="card-img-top" alt="${item.item_title}">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${item.item_title}</h5>
+                            <p class="card-text">${item.description}</p>
+                            <p class="card-text"><small class="text-muted">UPC: ${item.upc}</small></p>
+                        </div>
+                    </div>
+                `;
+                resultElement.innerHTML += card;
+            });
+        }
+
+        function displayError(error) {
+            const resultElement = document.getElementById("result");
+            resultElement.textContent = "Lỗi: " + error.message;
+            console.error("Lỗi API:", error);
         }
     </script>
 </body>
